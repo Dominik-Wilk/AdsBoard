@@ -7,15 +7,15 @@ import EditAdForm from '../../features/EditAdForm/EditAdForm';
 
 const EditAd = () => {
   const { id } = useParams();
-  const adData = useSelector(state => getAdById(state, id));
-
   const user = useSelector(state => checkIfLoggedIn(state));
-
+  const ad = useSelector(state => getAdById(state, id));
+  console.log(ad.user.login);
+  console.log(user.login);
   if (!user) return <Navigate to='/' />;
   else
     return (
       <div>
-        {adData === undefined ? (
+        {ad === undefined ? (
           <Spinner key='spinner' animation='border' role='status'>
             <span className='visually-hidden'>Loading...</span>
           </Spinner>

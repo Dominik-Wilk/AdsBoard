@@ -27,16 +27,6 @@ const AdForm = ({ action, actionText, ...props }) => {
     if (Object.keys(errors).length === 0) {
       handleShow();
     }
-    // if (title && content && price && location && adDate) {
-    //   action({
-    //     title,
-    //     content,
-    //     price,
-    //     location,
-    //     date: adDate,
-    //     image,
-    //   });
-    // }
   };
 
   const handleClickConfirm = () => {

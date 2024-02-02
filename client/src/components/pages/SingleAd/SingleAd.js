@@ -14,7 +14,8 @@ const SingleAd = () => {
   const user = useSelector(state => checkIfLoggedIn(state));
   const date = new Date(adData.date);
   const datePublish = date.toLocaleDateString();
-
+  console.log(adData);
+  console.log(user);
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
