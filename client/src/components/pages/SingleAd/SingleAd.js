@@ -71,11 +71,9 @@ const SingleAd = () => {
         onHide={handleClose}
         className={styles['custom-modal']}>
         <Modal.Header closeButton>
-          <Modal.Title className={styles['modal-title']}>
-            Are you sure you want to do that?{' '}
-          </Modal.Title>
+          <Modal.Title>Are you sure you want to do that? </Modal.Title>
         </Modal.Header>
-        <Modal.Body className={styles['modal-body']}>
+        <Modal.Body>
           Are you absolutely certain you want to proceed with this action?
           <br />
           Once completed, this post will be permanently removed from the app!
