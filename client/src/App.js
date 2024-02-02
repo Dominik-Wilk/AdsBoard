@@ -53,7 +53,6 @@ function App() {
           <Route path={'/ads/:id'} element={<SingleAd />} />
           <Route path={'/ads/add'} element={<AddAd />} />
           <Route path={'/ads/edit/:id'} element={<EditAd />} />
-          {/* <Route path={'/ads/remove/:id'} element={<SingleAd />} /> */}
           <Route path={'/search/:searchPhrase'} element={<SearchResults />} />
           <Route path={'/login'} element={<Login />} />
           <Route path={'/register'} element={<Register />} />

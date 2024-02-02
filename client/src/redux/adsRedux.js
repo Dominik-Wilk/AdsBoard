@@ -56,7 +56,7 @@ export const editAdRequest = (data, id) => {
   return async dispatch => {
     dispatch(startRequest({ name: EDIT_AD }));
     try {
-      let res = await axios.put(`${API_URL}/ads/${id}`, data, {
+      let res = await axios.put(`${API_URL}/api/ads/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -74,7 +74,7 @@ export const removeAdRequest = id => {
   return async dispatch => {
     dispatch(startRequest({ name: EDIT_AD }));
     try {
-      await axios.delete(`${API_URL}/ads/${id}`, {
+      await axios.delete(`${API_URL}/api/ads/${id}`, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -92,19 +92,14 @@ const adsReducer = (statePart = initialState, action) => {
   switch (action.type) {
     case LOADS_ADS:
       return [...action.payload];
-    // case ADD_AD:
-    //   return [...statePart, { ...action.payload }];
+    case ADD_AD:
+      return [...statePart, { ...action.payload }];
     case EDIT_AD:
-      return statePart.map(advert =>
-        advert.id === action.payload.id
-          ? { ...advert, ...action.payload }
-          : advert
+      return statePart.map(ad =>
+        ad.id === action.payload.id ? { ...ad, ...action.payload } : ad
       );
     case REMOVE_AD:
-      return {
-        ...statePart,
-        data: statePart.ads.filter(ad => ad._id !== action.payload),
-      };
+      return statePart.filter(ad => ad._id !== action.payload);
     default:
       return statePart;
   }

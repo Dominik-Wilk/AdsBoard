@@ -1,17 +1,31 @@
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
 import styles from './SingleAd.module.scss';
-import { useParams, Navigate, NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { getAdById } from '../../../redux/adsRedux';
+import { useParams, Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAdById, removeAdRequest } from '../../../redux/adsRedux';
 import { IMG_URL } from '../../../config';
 import { checkIfLoggedIn } from '../../../redux/usersRedux';
+import { useState } from 'react';
 
 const SingleAd = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const adData = useSelector(state => getAdById(state, id));
   const user = useSelector(state => checkIfLoggedIn(state));
   const date = new Date(adData.date);
   const datePublish = date.toLocaleDateString();
+
+  const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleClickRemove = () => {
+    handleClose();
+    dispatch(removeAdRequest(adData._id));
+    navigate('/');
+  };
   if (!adData) return <Navigate to='/' />;
   return (
     <div className={styles.card}>
@@ -43,12 +57,41 @@ const SingleAd = () => {
                   className={styles.buttonEdit}>
                   Edit
                 </Button>
-                <Button className={styles.buttonDelete}>Delete</Button>
+                <Button className={styles.buttonDelete} onClick={handleShow}>
+                  Delete
+                </Button>
               </Col>
             </Row>
           )}
         </Card.Body>
       </Card>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        className={styles['custom-modal']}>
+        <Modal.Header closeButton>
+          <Modal.Title className={styles['modal-title']}>
+            Are you sure you want to do that?{' '}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className={styles['modal-body']}>
+          Are you absolutely certain you want to proceed with this action?
+          <br />
+          Once completed, this post will be permanently removed from the app!
+        </Modal.Body>
+        <Modal.Footer>
+          <Button id='cancel-button' variant='secondary' onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            id='remove-button'
+            variant='danger'
+            onClick={handleClickRemove}>
+            Remove
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

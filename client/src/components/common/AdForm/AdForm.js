@@ -11,7 +11,11 @@ const AdForm = ({ action, actionText, ...props }) => {
   const [image, setImage] = useState(props.image || null);
   const [adDate, setAdDate] = useState(new Date());
 
-  console.log(actionText);
+  const {
+    register,
+    handleSubmit: validate,
+    formState: { errors },
+  } = useForm();
 
   const handleSubmit = () => {
     if (title && content && price && location && adDate) {
@@ -26,11 +30,6 @@ const AdForm = ({ action, actionText, ...props }) => {
     }
   };
 
-  const {
-    register,
-    handleSubmit: validate,
-    formState: { errors },
-  } = useForm();
   return (
     <Form className='col-12 col-sm-6 mx-auto' onSubmit={validate(handleSubmit)}>
       <h2>{props.children}</h2>
