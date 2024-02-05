@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Navigate, useParams } from 'react-router-dom';
 import { getAdById } from '../../../redux/adsRedux';
 import { Spinner } from 'react-bootstrap';
 import { checkIfLoggedIn } from '../../../redux/usersRedux';

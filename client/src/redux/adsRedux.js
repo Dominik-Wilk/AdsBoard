@@ -28,7 +28,7 @@ export const removeAd = payload => ({ type: REMOVE_AD, payload });
 
 export const fetchAds = () => {
   return dispatch => {
-    fetch(API_URL + '/api/ads')
+    fetch(API_URL + '/ads')
       .then(res => res.json())
       .then(ads => dispatch(getDataAds(ads)));
   };
@@ -38,7 +38,7 @@ export const addAdRequest = data => {
   return async dispatch => {
     dispatch(startRequest({ name: ADD_AD }));
     try {
-      let res = await axios.post(`${API_URL}/api/ads`, data, {
+      let res = await axios.post(`${API_URL}/ads`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -56,7 +56,7 @@ export const editAdRequest = (data, id) => {
   return async dispatch => {
     dispatch(startRequest({ name: EDIT_AD }));
     try {
-      let res = await axios.put(`${API_URL}/api/ads/${id}`, data, {
+      let res = await axios.put(`${API_URL}/ads/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -74,7 +74,7 @@ export const removeAdRequest = id => {
   return async dispatch => {
     dispatch(startRequest({ name: EDIT_AD }));
     try {
-      await axios.delete(`${API_URL}/api/ads/${id}`, {
+      await axios.delete(`${API_URL}/ads/${id}`, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

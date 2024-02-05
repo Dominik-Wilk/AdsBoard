@@ -49,7 +49,7 @@ app.use(
 app.use(helmet());
 
 app.use('/api', adsRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build/index.html'));

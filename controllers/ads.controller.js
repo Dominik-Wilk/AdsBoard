@@ -68,9 +68,11 @@ exports.deleteAd = async (req, res) => {
     const ad = await Ad.findById(req.params.id);
     if (!ad) {
       res.status(404).json({ message: 'Ad Not Found' });
-    } else {
-      await Ad.deleteOne({ _id: req.params.id });
-      res.json({ message: 'Ad deleted successfully' });
+    }
+    await Ad.deleteOne({ _id: req.params.id });
+    res.json({ message: 'Ad deleted successfully' });
+    if (ad.image) {
+      unlinkAsync(`./public/uploads/${ad.image}`);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -78,55 +80,81 @@ exports.deleteAd = async (req, res) => {
 };
 
 exports.editAd = async (req, res) => {
+  const { title, location, content, price, date } = req.body;
+  const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
+
   try {
-    const adToEdit = await Ad.findById(req.params.id);
-    if (!adToEdit) {
-      res.status(404).json({ message: 'Ad not found' });
-    } else {
-      const { title, content, date, image, price, location, user } = req.body;
-      let newImage = req.file ? req.file.filename : undefined;
+    const ad = await Ad.findOne({ _id: req.params.id });
+    const user = await User.findOne({ login: req.session.user.login });
 
-      if (newImage) {
-        const editedAd = await Ad.updateOne(
-          { _id: req.params.id },
-          {
-            $set: {
-              title: title,
-              content: content,
-              date: date,
-              image: newImage,
-              price: price,
-              location: location,
-              user: user,
-            },
-          }
-        );
-
-        if (adToEdit.image) {
-          await fs.unlink(`./public/uploads/${adToEdit.image}`);
-        }
-
-        res.json(editedAd);
-      } else {
-        const editedAd = await Ad.updateOne(
-          { _id: req.params.id },
-          {
-            $set: {
-              title: title,
-              content: content,
-              date: date,
-              price: price,
-              location: location,
-              user: user,
-            },
-          }
-        );
-
-        res.json(editedAd);
-      }
+    if (!ad || (ad.user.toString() !== user._id.toString() && !req.file)) {
+      return res
+        .status(400)
+        .json({ error: 'BadRequest', message: 'Invalid request!' });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    if (ad.user.toString() !== user._id.toString() && req.file) {
+      await fs.unlink(`./public/uploads/${req.file.filename}`);
+      return res
+        .status(400)
+        .json({ error: 'BadRequest', message: 'Invalid request!' });
+    }
+
+    if (title && location && content && price && date) {
+      let newAd = {};
+
+      if (
+        req.file &&
+        ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)
+      ) {
+        newAd = await Ad.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $set: {
+              title,
+              location,
+              content,
+              price,
+              date,
+              image: req.file.filename,
+              user,
+            },
+          },
+          { new: true }
+        );
+
+        // Asynchronously deleting the previous file
+        if (ad.image) {
+          await fs.unlink(`./public/uploads/${ad.image}`);
+        }
+      } else {
+        newAd = await Ad.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $set: {
+              title,
+              location,
+              content,
+              price,
+              date,
+            },
+          },
+          { new: true }
+        );
+      }
+
+      if (newAd) {
+        return res
+          .status(200)
+          .json({ success: true, message: 'Ad updated', modifiedAd: newAd });
+      }
+
+      return res
+        .status(404)
+        .json({ error: 'NotFound', message: 'Ad not found!' });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: 'ServerError', message: err.message });
   }
 };
 

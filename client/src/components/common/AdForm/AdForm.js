@@ -122,7 +122,7 @@ const AdForm = ({ action, actionText, ...props }) => {
           <Form.Label>Image:</Form.Label>
           <br />
           <Form.Control
-            {...register('image', { required: true })}
+            {...register('image')}
             type='file'
             onChange={e => {
               setImage(e.target.files[0]);
@@ -137,24 +137,48 @@ const AdForm = ({ action, actionText, ...props }) => {
         <Button variant='primary' type='submit'>
           {actionText}
         </Button>
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Congratulation your advert is alive! </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Your advert has been correctly added
-            <br />
-            Please click the button below to go to the main page
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              id='confirm-button'
-              variant='success'
-              onClick={handleClickConfirm}>
-              Confirm
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {actionText === 'Create Advert' && (
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Congratulation your advert is alive! </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Your advert has been correctly added
+              <br />
+              Please click the button below to go to the main page
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                id='confirm-button'
+                variant='success'
+                onClick={handleClickConfirm}>
+                Confirm
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+        {actionText === 'Edit Ad' && (
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Congratulation your advert has been correctly updated!{' '}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Your advert has been correctly updated
+              <br />
+              Please click the button below to go to the main page
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                id='confirm-button'
+                variant='success'
+                onClick={handleClickConfirm}>
+                Confirm
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
       </Form>
     </>
   );

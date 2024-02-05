@@ -33,7 +33,9 @@ const Login = () => {
         if (res.status === 200) {
           setStatus('success');
           dispatch(logIn({ login }));
-          navigate('/');
+          setTimeout(() => {
+            navigate('/');
+          }, 3000);
         } else if (res.status === 400) {
           setStatus('clientError');
         } else {
