@@ -14,8 +14,6 @@ import { useEffect } from 'react';
 import { fetchAds } from './redux/adsRedux';
 import AddAd from './components/pages/CreateAd/CreateAd';
 import SearchResults from './components/pages/SearchResult/SearchResult';
-import { API_URL } from './config';
-import { logIn } from './redux/usersRedux';
 import EditAd from './components/pages/EditAd/EditAd';
 
 function App() {
@@ -23,26 +21,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchAds());
   }, [dispatch]);
-
-  const options = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  fetch(`${API_URL}/auth/user`, options)
-    .then(res => {
-      if (res.status === 200) {
-        return res.json();
-      } else {
-        throw new Error('Request failed');
-      }
-    })
-    .then(data => {
-      dispatch(logIn({ login: data.login }));
-    })
-    .catch(e => {
-      console.log(e);
-    });
 
   return (
     <Page>

@@ -139,7 +139,7 @@ const AdForm = ({ action, actionText, ...props }) => {
         </Button>
         {actionText === 'Create Advert' && (
           <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>Congratulation your advert is alive! </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -159,9 +159,9 @@ const AdForm = ({ action, actionText, ...props }) => {
         )}
         {actionText === 'Edit Ad' && (
           <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>
-                Congratulation your advert has been correctly updated!{' '}
+                Congratulation your advert has been correctly updated!
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

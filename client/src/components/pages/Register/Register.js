@@ -6,6 +6,7 @@ import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './Register.module.scss';
 import { API_URL } from '../../../config';
+import { PasswordStrength } from '../../features/PasswordStrength/PasswordStrength';
 
 const Register = () => {
   const [login, setLogin] = useState('');
@@ -90,13 +91,9 @@ const Register = () => {
             placeholder='Enter login'></Form.Control>
         </Form.Group>
 
-        <Form.Group className='mb-3' controlId='formPassword'>
+        <Form.Group controlId='formPassword'>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder='Password'></Form.Control>
+          <PasswordStrength onChange={e => setPassword(password)} />
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formPhone'>

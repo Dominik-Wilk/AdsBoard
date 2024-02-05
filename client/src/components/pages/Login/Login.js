@@ -9,11 +9,14 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch } from 'react-redux';
 import { logIn } from '../../../redux/usersRedux';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState(null); // null , 'loading', 'success', 'serverError', 'clientError'
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,6 +48,10 @@ const Login = () => {
       .catch(err => {
         setStatus('serverError');
       });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -84,15 +91,23 @@ const Login = () => {
             type='text'
             value={login}
             onChange={e => setLogin(e.target.value)}
-            placeholder='Enter login'></Form.Control>
+            placeholder='Enter login'
+          />
         </Form.Group>
         <Form.Group className='mb-3' controlId='formPassword'>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder='Password'></Form.Control>
+          <div className={`${styles.passwordContainer}`}>
+            <Form.Control
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              className=''
+              onChange={e => setPassword(e.target.value)}
+              placeholder='Password'
+            />
+            <div className={styles.eyeIcon} onClick={togglePasswordVisibility}>
+              <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+            </div>
+          </div>
         </Form.Group>
         <Button variant='primary' type='submit' className={styles.button}>
           Sign in

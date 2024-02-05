@@ -10,6 +10,7 @@ exports.getAll = async (req, res) => {
     const ads = await Ad.find().populate('user');
     res.json(ads);
   } catch (error) {
+    console.error(err);
     res.status(500).json({ message: error.message });
   }
 };
@@ -21,6 +22,7 @@ exports.getAdById = async (req, res) => {
       res.status(404).json({ message: 'Ad Not Found' });
     } else res.json(ad);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err });
   }
 };
@@ -59,6 +61,7 @@ exports.addNewAd = async (req, res) => {
       }
     }
   } catch (error) {
+    console.error(err);
     res.status(500).json({ message: error.message });
   }
 };
@@ -75,6 +78,7 @@ exports.deleteAd = async (req, res) => {
       unlinkAsync(`./public/uploads/${ad.image}`);
     }
   } catch (error) {
+    console.error(err);
     res.status(500).json({ message: error.message });
   }
 };
@@ -93,54 +97,31 @@ exports.editAd = async (req, res) => {
         .json({ error: 'BadRequest', message: 'Invalid request!' });
     }
 
-    if (ad.user.toString() !== user._id.toString() && req.file) {
-      await fs.unlink(`./public/uploads/${req.file.filename}`);
-      return res
-        .status(400)
-        .json({ error: 'BadRequest', message: 'Invalid request!' });
-    }
-
     if (title && location && content && price && date) {
       let newAd = {};
 
-      if (
-        req.file &&
-        ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)
-      ) {
-        newAd = await Ad.findOneAndUpdate(
-          { _id: req.params.id },
-          {
-            $set: {
-              title,
-              location,
-              content,
-              price,
-              date,
-              image: req.file.filename,
-              user,
-            },
+      newAd = await Ad.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $set: {
+            title,
+            location,
+            content,
+            price,
+            date,
+            image:
+              req.file &&
+              ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)
+                ? req.file.filename
+                : ad.image,
+            user,
           },
-          { new: true }
-        );
-
-        // Asynchronously deleting the previous file
-        if (ad.image) {
-          await fs.unlink(`./public/uploads/${ad.image}`);
-        }
-      } else {
-        newAd = await Ad.findOneAndUpdate(
-          { _id: req.params.id },
-          {
-            $set: {
-              title,
-              location,
-              content,
-              price,
-              date,
-            },
-          },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
+      // Asynchronously deleting the previous file
+      if (req.file) {
+        await unlinkAsync(`./public/uploads/${ad.image}`);
       }
 
       if (newAd) {
@@ -154,6 +135,7 @@ exports.editAd = async (req, res) => {
         .json({ error: 'NotFound', message: 'Ad not found!' });
     }
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'ServerError', message: err.message });
   }
 };
@@ -165,6 +147,7 @@ exports.search = async (req, res) => {
     });
     res.json(ads);
   } catch (error) {
+    console.error(err);
     res.status(500).json({ message: error.message });
   }
 };
