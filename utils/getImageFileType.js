@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 const getImageFileType = async image => {
-  // Determine header bytes
   const determineHeader = () =>
     new Promise((resolve, reject) => {
       try {

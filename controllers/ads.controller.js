@@ -119,7 +119,6 @@ exports.editAd = async (req, res) => {
         },
         { new: true }
       );
-      // Asynchronously deleting the previous file
       if (req.file) {
         await unlinkAsync(`./public/uploads/${ad.image}`);
       }
